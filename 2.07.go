@@ -38,6 +38,7 @@ func main() {
 		}
 	}()
 
+	row := 1
 	for scanner.Scan() {
 		line := scanner.Text()
 		fields := strings.Split(line, "|")
@@ -52,8 +53,8 @@ func main() {
 		}
 
 		// Формируем строку для записи
-		outLine := fmt.Sprintf("Name: %s\nAddress: %s\nCity: %s\n\n\n",
-			fields[0], fields[1], fields[2])
+		outLine := fmt.Sprintf("row(%d)\nName: %s\nAddress: %s\nCity: %s\n\n\n",
+			row, fields[0], fields[1], fields[2])
 
 		// Записываем строку
 		_, err = outFile.WriteString(outLine)
@@ -61,6 +62,7 @@ func main() {
 			fmt.Println("Ошибка записи в файл", err)
 			return
 		}
+		row++
 	}
 
 	if err := scanner.Err(); err != nil {
