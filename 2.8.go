@@ -3,30 +3,36 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 )
 
 func main() {
 	file, err := os.Open("ini.txt")
 	if err != nil {
-		fmt.Errorf("Ошибка открытия файлa: %w", err)
+		fmt.Println("Ошибка открытия файла:", err)
 		return
 	}
 	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	reader := bufio.NewReader(file)
 
-	countStrings := 0
+	var count int
 
-	for scanner.Scan() {
-		countStrings++
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				fmt.Println("Конец файла")
+				break
+			} else {
+				fmt.Println("Ошибка чтения файла:", err)
+				return
+			}
+		}
+		count++
+		fmt.Println(line)
 	}
 
-	if err := scanner.Err(); err != nil {
-		fmt.Errorf("Ошибка сканирования файла: %w", err)
-		return
-	}
-
-	fmt.Println("Total strings: %d\n", countStrings)
-
+	fmt.Printf("Total strings: %d\n", count)
 }
